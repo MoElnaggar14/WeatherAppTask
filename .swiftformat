@@ -1,0 +1,94 @@
+# file options
+--exclude \
+  Packages/WeatherAppSecrets/*, \
+  **/*+Generated.swift, \
+  **/Generated/*
+
+# options
+--swiftversion 6.0
+--self remove # redundantSelf
+--importgrouping testable-bottom # sortedImports
+--commas always # trailingCommas
+--trimwhitespace always # trailingSpace
+--indent 4 # indent
+--ifdef no-indent # indent
+--indentstrings true # indent
+--wraparguments before-first # wrapArguments
+--wrapparameters before-first # wrapArguments
+--wrapcollections before-first # wrapArguments
+--wrapconditions before-first # wrapArguments
+--wrapreturntype preserve # wrapArguments
+--closingparen balanced # wrapArguments
+--wraptypealiases before-first # wrapArguments
+--funcattributes prev-line # wrapAttributes
+--typeattributes prev-line # wrapAttributes
+--wrapternary before-operators # wrap
+--patternlet inline # hoistPatternLet
+--redundanttype explicit # redundantType
+--emptybraces spaced # emptyBraces
+--allman false
+--stripunusedargs closure-only
+
+# We recommend a max width of 120 but _strictly enforce_ a max width of 150
+--maxwidth 150 # wrap
+
+# rules
+--enable anyObjectProtocol
+--enable blankLinesBetweenScopes
+--enable consecutiveSpaces
+--enable duplicateImports
+--enable extensionAccessControl
+--enable hoistPatternLet
+--enable indent
+--enable markTypes
+--enable redundantParens
+--enable redundantReturn
+--enable redundantSelf
+--enable redundantType
+--enable redundantPattern
+--enable redundantGet
+--enable redundantFileprivate
+--enable redundantRawValues
+--enable sortImports
+--enable sortDeclarations
+--enable strongifiedSelf
+--enable trailingSpace
+--enable typeSugar
+--enable wrap
+--enable wrapArguments
+--enable wrapAttributes
+--enable braces
+--enable redundantClosure
+--enable redundantInit
+--enable redundantVoidReturnType
+--enable unusedArguments
+--enable spaceInsideBrackets
+--enable spaceInsideBraces
+--enable spaceAroundBraces
+--enable spaceInsideParens
+--enable spaceAroundParens
+--enable blockComments
+--enable spaceAroundComments
+--enable spaceInsideComments
+--enable blankLinesAtStartOfScope
+--enable blankLinesAtEndOfScope
+--enable emptyBraces
+--enable andOperator
+--enable semicolons
+--enable trailingClosures
+--enable wrapSwitchCases
+--enable modifierOrder
+--enable docComments
+--enable redundantLetError
+--enable redundantNilInit
+--enable redundantOptionalBinding
+--enable consecutiveBlankLines
+--enable leadingDelimiters
+--enable preferKeyPath
+--enable redundantBackticks
+--enable redundantBreak
+--enable redundantExtensionACL
+--enable redundantObjc
+--enable redundantStaticSelf
+--enable wrapEnumCases
+--enable yodaConditions
