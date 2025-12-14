@@ -74,8 +74,8 @@ iOSInjectionProject/
 
 # Secrets
 .env
-Packages/Keys/**
-Packages/KeysInterfaces/**
+Packages/WeatherAppSecrets/**
+Packages/WeatherAppSecretsInterfaces/**
 
 # Ruby Version
 /Gemfile.lock
