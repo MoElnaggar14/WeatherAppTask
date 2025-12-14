@@ -9,30 +9,24 @@ import Foundation
 
 // MARK: - CacheManager
 
-final class CacheManager {
+final class CacheManager: Storage {
     enum SupportedStorage {
         case userDefaults
         case disk
     }
 
-    private let decoder: JSONDecoder
-    private let encoder: JSONEncoder
+    static let shared = CacheManager()
+
     private lazy var userDefaultsStorage = UserDefaultsStorage()
     private lazy var diskStorage = DiskStorage()
 
-    init(
-        decoder: JSONDecoder = .init(),
-        encoder: JSONEncoder = .init()
-    ) {
-        self.decoder = decoder
-        self.encoder = encoder
+    init() { }
+
+    func fetch<T: Codable>(for key: StorageKey) async throws -> T? {
+        try await getSuitableStorage(from: key.suitableStorage).fetch(for: key)
     }
 
-    func fetch<T: Codable>(_: T.Type, for key: StorageKey) async throws -> T? {
-        try await getSuitableStorage(from: key.suitableStorage).fetchValue(for: key)
-    }
-
-    func save(_ value: some Codable, for key: StorageKey) async throws {
+    func save(value: some Codable, for key: StorageKey) async throws {
         try await getSuitableStorage(from: key.suitableStorage).save(value: value, for: key)
     }
 
@@ -45,9 +39,10 @@ private extension CacheManager {
     func getSuitableStorage(from choice: SupportedStorage) -> Storage {
         switch choice {
         case .userDefaults:
-            return userDefaultsStorage
+            userDefaultsStorage
 
         case .disk:
+            diskStorage
         }
     }
 }

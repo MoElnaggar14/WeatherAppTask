@@ -6,29 +6,46 @@
 //
 
 import Foundation
+import SwiftMoLogger
 
 // MARK: - DiskStorage
 
 final class DiskStorage {
     private let fileManager = FileManager.default
-    private let cacheDirectory: URL
-    private let queue = DispatchQueue(label: "com.weatherapp.diskcache", attributes: .concurrent)
+    private let cachesDirectoryURL: URL?
+    private let jsonEncoder = JSONEncoder()
+    private let jsonDecoder = JSONDecoder()
 
-    init(subdirectory: String = "DiskCache") throws {
-        let cachesDirectory = try fileManager.url(
-            for: .cachesDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
+    init() {
+        cachesDirectoryURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+    }
 
-        cacheDirectory = cachesDirectory.appendingPathComponent(subdirectory, isDirectory: true)
+    private func url(for key: StorageKey) -> URL? {
+        cachesDirectoryURL?.appendingPathComponent(key.key)
+    }
+}
 
-        if !fileManager.fileExists(atPath: cacheDirectory.path) {
-            try fileManager.createDirectory(
-                at: cacheDirectory,
-                withIntermediateDirectories: true
-            )
+// MARK: ReadableStorage
+
+extension DiskStorage: ReadableStorage {
+    func fetch<T: Codable>(for key: StorageKey) async throws -> T? {
+        guard let fileURL = url(for: key) else {
+            throw StorageError.notFound
+        }
+
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            // Return nil if not found, as per the protocol's nullable return type
+            // or you could throw .notFound if you changed the protocol return type.
+            return nil
+        }
+
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try jsonDecoder.decode(T.self, from: data)
+        } catch let decodingError as DecodingError {
+            throw StorageError.decodingFailed(decodingError)
+        } catch {
+            throw StorageError.cantWrite(error)
         }
     }
 }
@@ -37,40 +54,37 @@ final class DiskStorage {
 
 extension DiskStorage: WritableStorage {
     func save(value: some Codable, for key: StorageKey) async throws {
-        let fileURL = cacheDirectory.appendingPathComponent(key.key)
+        guard let fileURL = url(for: key) else {
+            throw StorageError.notFound
+        }
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            queue.async(flags: .barrier) {
-                do {
-                    try value.write(to: fileURL, options: .atomic)
-                    continuation.resume()
-                } catch {
-                    continuation.resume(throwing: StorageError.saveFailed)
-                }
-            }
+        let data: Data
+        do {
+            data = try jsonEncoder.encode(value)
+        } catch {
+            throw StorageError.encodingFailed(error)
+        }
+
+        do {
+            try data.write(to: fileURL, options: .atomic)
+        } catch {
+            throw StorageError.saveFailed(error)
         }
     }
 
-    func remove(type _: (some Codable).Type, for key: StorageKey) async throws {
-        let fileURL = cacheDirectory.appendingPathComponent(key.key)
+    func remove(type: (some Codable).Type, for key: StorageKey) async throws {
+        guard let fileURL = url(for: key) else {
+            throw StorageError.notFound
+        }
 
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            queue.async(flags: .barrier) {
-                do {
-                    if self.fileManager.fileExists(atPath: fileURL.path) {
-                        try self.fileManager.removeItem(at: fileURL)
-                    }
-                    continuation.resume()
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
+        guard fileManager.fileExists(atPath: fileURL.path) else {
+            return
+        }
+
+        do {
+            try fileManager.removeItem(at: fileURL)
+        } catch {
+            throw StorageError.cantDelete(key)
         }
     }
-}
-
-// MARK: ReadableStorage
-
-extension DiskStorage: ReadableStorage {
-    func fetchValue<T: Codable>(for key: StorageKey) async throws -> T? { }
 }

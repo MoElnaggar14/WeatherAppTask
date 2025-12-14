@@ -9,15 +9,15 @@ import Foundation
 
 // MARK: - ReadableStorage
 
-public protocol ReadableStorage {
-    func fetchValue<T: Codable>(for key: StorageKey) async throws -> T?
+protocol ReadableStorage {
+    func fetch<T: Codable>(for key: StorageKey) async throws -> T?
 }
 
 // MARK: - WritableStorage
 
-public protocol WritableStorage {
+protocol WritableStorage {
     func save(value: some Codable, for key: StorageKey) async throws
     func remove(type: (some Codable).Type, for key: StorageKey) async throws
 }
 
-public typealias Storage = ReadableStorage & WritableStorage
+typealias Storage = ReadableStorage & WritableStorage

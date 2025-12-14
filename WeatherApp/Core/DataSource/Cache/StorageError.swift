@@ -7,8 +7,13 @@
 
 import Foundation
 
-public enum StorageError: Error {
+enum StorageError: Error {
     case notFound
     case cantWrite(Error)
     case cantDelete(StorageKey)
+    case saveFailed(Error)
+    case decodingFailed(Error)
+    case encodingFailed(Error)
+    case expired
+    case invalidData
 }
