@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */; };
+		A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A472EEF0F7500DB3AA5 /* Pulse */; };
+		A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A492EEF0F7500DB3AA5 /* PulseUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */,
+				A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */,
 				A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,6 +122,8 @@
 			name = WeatherApp;
 			packageProductDependencies = (
 				A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */,
+				A5BE7A472EEF0F7500DB3AA5 /* Pulse */,
+				A5BE7A492EEF0F7500DB3AA5 /* PulseUI */,
 			);
 			productName = WeatherApp;
 			productReference = A570A49A2EEEF521002EFE54 /* WeatherApp.app */;
@@ -204,6 +210,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */,
+				A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A570A49B2EEEF521002EFE54 /* Products */;
@@ -606,6 +613,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -613,6 +628,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */;
 			productName = SwiftMoLogger;
+		};
+		A5BE7A472EEF0F7500DB3AA5 /* Pulse */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = Pulse;
+		};
+		A5BE7A492EEF0F7500DB3AA5 /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,8 +7,6 @@ import Foundation
 
 public enum L10n {
   /// A text label that combines "Item at" with a formatted timestamp.
-  public static let %@ %@ = L10n.tr("%@ %@", fallback: "%1$@ %2$@")
-
   public static let addItem = L10n.tr("add_item", fallback: "Add Item")
 
   public static let citiesTitle = L10n.tr("cities_title", fallback: "Cities")

@@ -45,6 +45,9 @@ struct ContentView: View {
             }
             Text(L10n.selectAnItem)
         }
+        #if DEBUG
+        .debugMenu()
+        #endif
     }
 
     private func addItem() {

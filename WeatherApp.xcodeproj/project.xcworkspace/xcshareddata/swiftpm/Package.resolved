@@ -1,6 +1,15 @@
 {
-  "originHash" : "739d7216fbbe99339665b9eb79330120b3c9d9f1fcef26e2eecbc09c5b99f918",
+  "originHash" : "d6b4aece757dc3711e7a3510a0e6e97b210edbeab016f188bc63c03b36781be0",
   "pins" : [
+    {
+      "identity" : "pulse",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Pulse.git",
+      "state" : {
+        "revision" : "6125ce7fb51b114ba71b761d18cfd5557923bd4d",
+        "version" : "5.1.4"
+      }
+    },
     {
       "identity" : "swiftmologger",
       "kind" : "remoteSourceControl",
