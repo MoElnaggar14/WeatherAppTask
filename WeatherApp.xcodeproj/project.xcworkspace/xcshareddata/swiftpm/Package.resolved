@@ -1,0 +1,15 @@
+{
+  "originHash" : "739d7216fbbe99339665b9eb79330120b3c9d9f1fcef26e2eecbc09c5b99f918",
+  "pins" : [
+    {
+      "identity" : "swiftmologger",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MoElnaggar14/SwiftMoLogger.git",
+      "state" : {
+        "revision" : "f03d605226c0c1c63bd3b332cde8f3dc1df851ed",
+        "version" : "2.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}

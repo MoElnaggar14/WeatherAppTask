@@ -139,7 +139,7 @@ func generateL10nFile(from catalogPath: String, outputPath: String) throws {
 
         extension L10n {
           private static func tr(_ key: String, _ args: CVarArg..., fallback value: String) -> String {
-            let format = NSLocalizedString(key, bundle: Bundle.module, comment: "")
+            let format = NSLocalizedString(key, bundle: .main, comment: "")
             return String(format: format != key ? format : value, locale: Locale.current, arguments: args)
           }
         }

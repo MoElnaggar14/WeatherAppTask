@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A570A4AD2EEEF523002EFE54 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = WeatherApp;
 			packageProductDependencies = (
+				A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */,
 			);
 			productName = WeatherApp;
 			productReference = A570A49A2EEEF521002EFE54 /* WeatherApp.app */;
@@ -192,9 +198,13 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = A570A4912EEEF521002EFE54;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A570A49B2EEEF521002EFE54 /* Products */;
 			projectDirPath = "";
@@ -329,6 +339,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -386,6 +397,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -584,6 +596,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MoElnaggar14/SwiftMoLogger.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */;
+			productName = SwiftMoLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A570A4922EEEF521002EFE54 /* Project object */;
 }

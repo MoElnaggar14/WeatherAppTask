@@ -25,7 +25,7 @@ struct PersistenceController {
             // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application,
             // although it may be useful during development.
             let nsError = error as NSError
-            fatalError("unresolved_error \(nsError), \(nsError.userInfo)")
+            fatalError("\(L10n.unresolvedError) \(nsError), \(nsError.userInfo)")
         }
         return result
     }()
@@ -49,7 +49,7 @@ struct PersistenceController {
                 // * The device is out of space.
                 // * The store could not be migrated to the current model version.
                 // Check the error message to determine what the actual problem was.
-                fatalError("unresolved_error \(error), \(error.userInfo)")
+                fatalError("\(L10n.unresolvedError) \(error), \(error.userInfo)")
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true

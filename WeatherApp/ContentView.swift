@@ -25,7 +25,7 @@ struct ContentView: View {
                 ForEach(items) { item in
                     if let timestamp = item.timestamp {
                         NavigationLink {
-                            Text("Item at \(timestamp, formatter: itemFormatter)")
+                            Text("\(L10n.itemAt) \(timestamp, formatter: itemFormatter)")
                         } label: {
                             Text(timestamp, formatter: itemFormatter)
                         }
@@ -39,11 +39,11 @@ struct ContentView: View {
                 }
                 ToolbarItem {
                     Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        Label(L10n.addItem, systemImage: "plus")
                     }
                 }
             }
-            Text("Select an item")
+            Text(L10n.selectAnItem)
         }
     }
 
@@ -59,7 +59,7 @@ struct ContentView: View {
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping
                 // application, although it may be useful during development.
                 let nsError = error as NSError
-                fatalError("unresolved_error \(nsError), \(nsError.userInfo)")
+                fatalError("\(L10n.unresolvedError) \(nsError), \(nsError.userInfo)")
             }
         }
     }
@@ -75,7 +75,7 @@ struct ContentView: View {
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping
                 // application, although it may be useful during development.
                 let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                fatalError("\(L10n.unresolvedError) \(nsError), \(nsError.userInfo)")
             }
         }
     }
