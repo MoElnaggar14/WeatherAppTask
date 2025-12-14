@@ -1,0 +1,131 @@
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+// Swift 6 compliant with strict concurrency
+
+#if os(macOS)
+  import AppKit
+#elseif os(iOS)
+  import UIKit
+#elseif os(tvOS) || os(watchOS)
+  import UIKit
+#endif
+#if canImport(SwiftUI)
+  import SwiftUI
+#endif
+
+// MARK: - Asset Catalogs
+
+{% if catalogs %}
+{% set enumName %}{{param.enumName|default:"Asset"}}{% endset %}
+{% set imageType %}{{param.imageTypeName|default:"ImageAsset"}}{% endset %}
+{% set accessModifier %}{% if param.publicAccess %}public {% endif %}{% endset %}
+{% set bundleToken %}{{param.bundle|default:"BundleToken"}}{% endset %}
+// swiftlint:disable identifier_name line_length nesting type_body_length type_name
+{% macro recursiveBlock assets sp %}
+{% for asset in assets %}
+{% if asset.type == "image" %}
+{{sp}}{{accessModifier}}static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{imageType}}(name: "{{asset.value}}")
+{% elif asset.items and ( param.forceProvidesNamespaces == "true" or asset.isNamespaced == "true" ) %}
+{{sp}}{{accessModifier}}enum {{asset.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+{{sp}}  {% call recursiveBlock asset.items sp+"  " %}
+{{sp}}}
+{% elif asset.items %}
+{{sp}}{% call recursiveBlock asset.items sp %}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+{{accessModifier}}enum {{enumName}}: Sendable {
+{% if catalogs.count > 1 or param.forceFileNameEnum %}
+{% for catalog in catalogs %}
+  {{accessModifier}}enum {{catalog.name|swiftIdentifier:"pretty"|escapeReservedKeywords}}: Sendable {
+  {% call recursiveBlock catalog.assets "  " %}
+  }
+{% endfor %}
+{% else %}
+{% call recursiveBlock catalogs.first.assets "" %}
+{% endif %}
+}
+// swiftlint:enable identifier_name line_length nesting type_body_length type_name
+
+// MARK: - Implementation Details
+
+{{accessModifier}}struct {{imageType}}: Sendable {
+  {{accessModifier}}let name: String
+
+  #if os(macOS)
+  {{accessModifier}}typealias Image = NSImage
+  #elseif os(iOS) || os(tvOS) || os(watchOS)
+  {{accessModifier}}typealias Image = UIImage
+  #endif
+
+  @available(iOS 8.0, tvOS 9.0, watchOS 2.0, macOS 10.7, *)
+  @MainActor
+  {{accessModifier}}var image: Image {
+    {% if param.bundle %}
+    let bundle = Bundle{{param.bundle}}
+    {% else %}
+    let bundle = {{bundleToken}}.bundle
+    {% endif %}
+    #if os(iOS) || os(tvOS)
+    let image = Image(named: name, in: bundle, compatibleWith: nil)
+    #elseif os(macOS)
+    let imageName = NSImage.Name(name)
+    let image = (bundle == .main) ? NSImage(named: imageName) : bundle.image(forResource: imageName)
+    #elseif os(watchOS)
+    let image = Image(named: name)
+    #endif
+    guard let result = image else {
+      fatalError("Unable to load image asset named \(name).")
+    }
+    return result
+  }
+
+  #if os(iOS) || os(tvOS)
+  @available(iOS 8.0, tvOS 9.0, *)
+  @MainActor
+  {{accessModifier}}func image(compatibleWith traitCollection: UITraitCollection) -> Image {
+    {% if param.bundle %}
+    let bundle = Bundle{{param.bundle}}
+    {% else %}
+    let bundle = {{bundleToken}}.bundle
+    {% endif %}
+    guard let result = Image(named: name, in: bundle, compatibleWith: traitCollection) else {
+      fatalError("Unable to load image asset named \(name).")
+    }
+    return result
+  }
+  #endif
+
+  #if canImport(SwiftUI)
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+  {{accessModifier}}var swiftUIImage: SwiftUI.Image {
+    SwiftUI.Image(name, bundle: {% if param.bundle %}Bundle{{param.bundle}}{% else %}{{bundleToken}}.bundle{% endif %})
+  }
+  #endif
+}
+
+#if canImport(SwiftUI)
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+{{accessModifier}}extension SwiftUI.Image {
+  init(asset: {{imageType}}) {
+    self.init(asset.name, bundle: {% if param.bundle %}Bundle{{param.bundle}}{% else %}{{bundleToken}}.bundle{% endif %})
+  }
+}
+#endif
+
+{% if not param.bundle %}
+// swiftlint:disable convenience_type
+private final class {{bundleToken}} {
+  static let bundle: Bundle = {
+    #if SWIFT_PACKAGE
+    return Bundle.module
+    #else
+    return Bundle(for: {{bundleToken}}.self)
+    #endif
+  }()
+}
+// swiftlint:enable convenience_type
+{% endif %}
+{% else %}
+// No assets found
+{% endif %}

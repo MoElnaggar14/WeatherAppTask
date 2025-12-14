@@ -1,0 +1,92 @@
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+
+{% if tables.count > 0 %}
+{% set accessModifier %}{% if param.publicAccess %}public{% else %}internal{% endif %}{% endset %}
+import Foundation
+
+// MARK: - Strings
+
+{% macro parametersBlock types %}{% filter removeNewlines:"leading" %}
+  {% for type in types %}
+    {% if type == "String" %}
+    _ p{{forloop.counter}}: Any
+    {% elif type == "UnsafeRawPointer" %}
+    _ p{{forloop.counter}}: UnsafeRawPointer
+    {% elif type == "Int" %}
+    _ p{{forloop.counter}}: Int
+    {% else %}
+    _ p{{forloop.counter}}: {{type}}
+    {% endif %}
+    {{ ", " if not forloop.last }}
+  {% endfor %}
+{% endfilter %}{% endmacro %}
+{% macro argumentsBlock types %}{% filter removeNewlines:"leading" %}
+  {% for type in types %}
+    {% if type == "String" %}
+    String(describing: p{{forloop.counter}})
+    {% elif type == "UnsafeRawPointer" %}
+    Int(bitPattern: p{{forloop.counter}})
+    {% else %}
+    p{{forloop.counter}}
+    {% endif %}
+    {{ ", " if not forloop.last }}
+  {% endfor %}
+{% endfilter %}{% endmacro %}
+{% macro recursiveBlock table item sp %}
+{{sp}}  {% call accessModifier %}{% if not param.noComments %}
+{{sp}}  /// {{item.translation}}
+{{sp}}  {% endif %}{% if item.items %}
+{{sp}}  enum {{item.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+{{sp}}  {% filter indent:2," ",true %}{% for child in item.items %}{% call recursiveBlock table child sp %}{% endfor %}{% endfilter %}
+{{sp}}  }
+{{sp}}  {% elif item.types %}
+{{sp}}  static func {{item.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}}({% call parametersBlock item.types %}) -> String {
+{{sp}}    return {{enumName}}.tr("{{table}}", "{{item.key}}", {% call argumentsBlock item.types %}, fallback: "{{item.translation}}")
+{{sp}}  }
+{{sp}}  {% else %}
+{{sp}}  static let {{item.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{enumName}}.tr("{{table}}", "{{item.key}}", fallback: "{{item.translation}}")
+{{sp}}  {% endif %}
+{% endmacro %}
+{{accessModifier}} enum {{param.enumName|default:"L10n"}} {
+  {% if tables.count > 1 or param.forceFileNameEnum %}
+  {% for table in tables %}
+  {{accessModifier}} enum {{table.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+  {% filter indent:2," ",true %}{% for item in table.items %}{% call recursiveBlock table.name item "" %}{% endfor %}{% endfilter %}
+  }
+  {% endfor %}
+  {% else %}
+  {% for item in tables.first.items %}
+  {% call recursiveBlock tables.first.name item "" %}
+  {% endfor %}
+  {% endif %}
+}
+
+// MARK: - Implementation Details
+
+extension {{param.enumName|default:"L10n"}} {
+  private static func tr(_ table: String, _ key: String, _ args: CVarArg..., fallback value: String) -> String {
+    {% if param.bundle %}
+    let bundle = {{param.bundle}}
+    {% else %}
+    let bundle = BundleToken.bundle
+    {% endif %}
+    let format = NSLocalizedString(key, tableName: table, bundle: bundle, comment: "")
+    return String(format: format != key ? format : value, locale: Locale.current, arguments: args)
+  }
+}
+
+{% if not param.bundle %}
+private final class BundleToken {
+  static let bundle: Bundle = {
+    #if SWIFT_PACKAGE
+    return Bundle.module
+    #else
+    return Bundle(for: BundleToken.self)
+    #endif
+  }()
+}
+{% endif %}
+{% else %}
+// No string found
+{% endif %}

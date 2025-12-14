@@ -38,25 +38,8 @@ playground.xcworkspace
 # Packages/
 # Package.pins
 # Package.resolved
+.swiftpm
 .build/
-
-# CocoaPods
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# Pods/
-#
-# Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
-
-# Carthage
-#
-# Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
-Carthage/Build
 
 # Accio dependency management
 Dependencies/
@@ -73,6 +56,13 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+test-reports/
+fastlane/.env.secret
+fastlane/xcov_report/**/*
+fastlane/.env.default.auth
+fastlane/app_store_connect_api_key.p8
+fastlane/*.p8
+*/__Snapshots__/
 
 # Code Injection
 #
@@ -80,3 +70,16 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+*.DS_Store
+
+# Secrets
+.env
+Packages/Keys/**
+Packages/KeysInterfaces/**
+
+# Ruby Version
+/Gemfile.lock
+.ruby-version
+
+Brewfile.lock.json
+Reports/**

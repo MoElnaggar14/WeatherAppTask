@@ -1,0 +1,16 @@
+# Arkana configuration for managing secrets
+# See: https://github.com/rogerluan/arkana
+import_name: WeatherAppSecrets
+namespace: WeatherAppSecrets
+result_path: Packages/
+swift_declaration_strategy: let
+should_generate_unit_tests: true
+package_manager: spm
+environments:
+  - Debug
+  - Release
+global_secrets:
+
+environment_secrets:
+  - baseURL
+  - apiKey

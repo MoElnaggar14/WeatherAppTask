@@ -1,0 +1,56 @@
+## SwiftGen Configuration File
+## Documentation: https://github.com/SwiftGen/SwiftGen
+
+# WeatherApp Package - Colors
+xcassets:
+  - inputs:
+      - WeatherApp/Core/Resources/Assets/Colors.xcassets
+    outputs:
+      - templatePath: Templates/SwiftGen/xcassets-swift6.stencil
+        output: WeatherApp/Core/Resources/Assets/Generated/Colors+Generated.swift
+        params:
+          enumName: AppColors
+          publicAccess: true
+          bundle: .main
+          createFolders: true
+    filter:
+      include:
+        - ".*\\.colorset$"
+
+# WeatherApp Package - Icons
+  - inputs:
+      - WeatherApp/Core/Resources/Assets/Icons.xcassets
+    outputs:
+      - templatePath: Templates/SwiftGen/xcassets-images-swift6.stencil
+        output: WeatherApp/Core/Resources/Assets/Generated/Icons+Generated.swift
+        params:
+          enumName: AppIcons
+          imageTypeName: IconAsset
+          publicAccess: true
+          bundle: .main
+          forceProvidesNamespaces: true
+          createFolders: true
+    filter:
+      include:
+        - ".*\\.imageset$"
+
+# WeatherApp Package - Images
+  - inputs:
+      - WeatherApp/Core/Resources/Assets/Images.xcassets
+    outputs:
+      - templatePath: Templates/SwiftGen/xcassets-images-swift6.stencil
+        output: WeatherApp/Core/Resources/Assets/Generated/Images+Generated.swift
+        params:
+          enumName: AppImages
+          imageTypeName: ImageAsset
+          publicAccess: true
+          bundle: .main
+          forceProvidesNamespaces: true
+          createFolders: true
+    filter:
+      include:
+        - ".*\\.imageset$"
+
+# WeatherApp Package - Localizable Strings
+# Note: .xcstrings files are not supported by SwiftGen's built-in parser
+# L10n generation is handled by Scripts/generate-l10n.swift via rake generate
