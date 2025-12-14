@@ -10,6 +10,7 @@
 		A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */; };
 		A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A472EEF0F7500DB3AA5 /* Pulse */; };
 		A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A492EEF0F7500DB3AA5 /* PulseUI */; };
+		A5BE7A892EEF20FB00DB3AA5 /* WeatherAppSecrets in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 				A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */,
 				A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */,
 				A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */,
+				A5BE7A892EEF20FB00DB3AA5 /* WeatherAppSecrets in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +126,7 @@
 				A5BE7A312EEF01E400DB3AA5 /* SwiftMoLogger */,
 				A5BE7A472EEF0F7500DB3AA5 /* Pulse */,
 				A5BE7A492EEF0F7500DB3AA5 /* PulseUI */,
+				A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */,
 			);
 			productName = WeatherApp;
 			productReference = A570A49A2EEEF521002EFE54 /* WeatherApp.app */;
@@ -211,6 +214,7 @@
 			packageReferences = (
 				A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */,
 				A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */,
+				A5BE7A872EEF20FB00DB3AA5 /* XCLocalSwiftPackageReference "Packages/WeatherAppSecrets" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A570A49B2EEEF521002EFE54 /* Products */;
@@ -604,6 +608,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		A5BE7A872EEF20FB00DB3AA5 /* XCLocalSwiftPackageReference "Packages/WeatherAppSecrets" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/WeatherAppSecrets;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		A5BE7A302EEF01E400DB3AA5 /* XCRemoteSwiftPackageReference "SwiftMoLogger" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -638,6 +649,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */;
 			productName = PulseUI;
+		};
+		A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = WeatherAppSecrets;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
