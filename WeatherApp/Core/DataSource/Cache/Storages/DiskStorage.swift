@@ -6,36 +6,28 @@
 //
 
 import Foundation
-import SwiftMoLogger
 
 // MARK: - DiskStorage
 
-final class DiskStorage {
-    private let fileManager = FileManager.default
+actor DiskStorage {
     private let cachesDirectoryURL: URL?
     private let jsonEncoder = JSONEncoder()
     private let jsonDecoder = JSONDecoder()
 
     init() {
-        cachesDirectoryURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
+        cachesDirectoryURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
     }
 
     private func url(for key: StorageKey) -> URL? {
         cachesDirectoryURL?.appendingPathComponent(key.key)
     }
-}
 
-// MARK: ReadableStorage
-
-extension DiskStorage: ReadableStorage {
-    func fetch<T: Codable>(for key: StorageKey) async throws -> T? {
+    func fetch<T: Codable & Sendable>(for key: StorageKey) throws -> T? {
         guard let fileURL = url(for: key) else {
             throw StorageError.notFound
         }
 
-        guard fileManager.fileExists(atPath: fileURL.path) else {
-            // Return nil if not found, as per the protocol's nullable return type
-            // or you could throw .notFound if you changed the protocol return type.
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
             return nil
         }
 
@@ -48,12 +40,8 @@ extension DiskStorage: ReadableStorage {
             throw StorageError.cantWrite(error)
         }
     }
-}
 
-// MARK: WritableStorage
-
-extension DiskStorage: WritableStorage {
-    func save(value: some Codable, for key: StorageKey) async throws {
+    func save(value: some Codable & Sendable, for key: StorageKey) throws {
         guard let fileURL = url(for: key) else {
             throw StorageError.notFound
         }
@@ -72,17 +60,17 @@ extension DiskStorage: WritableStorage {
         }
     }
 
-    func remove(type: (some Codable).Type, for key: StorageKey) async throws {
+    func remove(type: (some Codable & Sendable).Type, for key: StorageKey) throws {
         guard let fileURL = url(for: key) else {
             throw StorageError.notFound
         }
 
-        guard fileManager.fileExists(atPath: fileURL.path) else {
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
             return
         }
 
         do {
-            try fileManager.removeItem(at: fileURL)
+            try FileManager.default.removeItem(at: fileURL)
         } catch {
             throw StorageError.cantDelete(key)
         }

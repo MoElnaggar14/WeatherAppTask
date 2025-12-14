@@ -7,17 +7,10 @@
 
 import Foundation
 
-// MARK: - ReadableStorage
+// MARK: - CacheManagerProtocol
 
-protocol ReadableStorage {
-    func fetch<T: Codable>(for key: StorageKey) async throws -> T?
+protocol CacheManagerProtocol: Sendable {
+    func fetch<T: Codable & Sendable>(for key: StorageKey) async throws -> T?
+    func save(value: some Codable & Sendable, for key: StorageKey) async throws
+    func remove(type: (some Codable & Sendable).Type, for key: StorageKey) async throws
 }
-
-// MARK: - WritableStorage
-
-protocol WritableStorage {
-    func save(value: some Codable, for key: StorageKey) async throws
-    func remove(type: (some Codable).Type, for key: StorageKey) async throws
-}
-
-typealias Storage = ReadableStorage & WritableStorage

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StorageKey {
+struct StorageKey: Sendable {
     let key: String
     let suitableStorage: CacheManager.SupportedStorage
 
