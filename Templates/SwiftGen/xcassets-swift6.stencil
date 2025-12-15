@@ -1,0 +1,86 @@
+// swiftlint:disable all
+// Generated using SwiftGen — https://github.com/SwiftGen/SwiftGen
+// Swift 6 compliant with strict concurrency
+
+#if os(macOS)
+  import AppKit
+#elseif os(iOS)
+  import UIKit
+#elseif os(tvOS) || os(watchOS)
+  import UIKit
+#endif
+#if canImport(SwiftUI)
+  import SwiftUI
+#endif
+
+// MARK: - Asset Catalogs
+
+{% if catalogs %}
+{% set enumName %}{{param.enumName|default:"Asset"}}{% endset %}
+{% set colorType %}{{param.colorTypeName|default:"ColorAsset"}}{% endset %}
+{% set imageType %}{{param.imageTypeName|default:"ImageAsset"}}{% endset %}
+{% set accessModifier %}{% if param.publicAccess %}public {% endif %}{% endset %}
+// swiftlint:disable identifier_name line_length nesting type_body_length type_name
+{% for catalog in catalogs %}
+{{accessModifier}}enum {{enumName}}: Sendable {
+  {% if catalog.assets %}
+  {% for asset in catalog.assets %}
+  {{accessModifier}}static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{colorType}}(name: "{{asset.value}}")
+  {% endfor %}
+  {% endif %}
+}
+{% endfor %}
+// swiftlint:enable identifier_name line_length nesting type_body_length type_name
+
+// MARK: - Implementation Details
+
+{{accessModifier}}struct {{colorType}}: Sendable {
+  {{accessModifier}}let name: String
+
+  #if os(macOS)
+  {{accessModifier}}typealias PlatformColor = NSColor
+  #elseif os(iOS) || os(tvOS) || os(watchOS)
+  {{accessModifier}}typealias PlatformColor = UIColor
+  #endif
+
+  /// UIKit/AppKit color (MainActor isolated)
+  @MainActor
+  {{accessModifier}}var uiColor: PlatformColor {
+    guard let color = PlatformColor(named: name, in: {{param.bundle}}, compatibleWith: nil) else {
+      fatalError("Unable to load color asset named \(name).")
+    }
+    return color
+  }
+
+  #if os(iOS) || os(tvOS)
+  @MainActor
+  {{accessModifier}}func uiColor(compatibleWith traitCollection: UITraitCollection) -> PlatformColor {
+    guard let color = PlatformColor(named: name, in: {{param.bundle}}, compatibleWith: traitCollection) else {
+      fatalError("Unable to load color asset named \(name).")
+    }
+    return color
+  }
+  #endif
+}
+
+// MARK: - SwiftUI Integration
+
+#if canImport(SwiftUI)
+extension {{colorType}} {
+  /// SwiftUI Color - can be used directly in SwiftUI views
+  {{accessModifier}}var color: SwiftUI.Color {
+    SwiftUI.Color(name, bundle: {{param.bundle}})
+  }
+}
+
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+{{accessModifier}}extension SwiftUI.Color {
+  /// Initialize Color from ColorAsset
+  init(_ asset: {{colorType}}) {
+    self.init(asset.name, bundle: {{param.bundle}})
+  }
+}
+#endif
+{% else %}
+// No assets found
+{% endif %}
