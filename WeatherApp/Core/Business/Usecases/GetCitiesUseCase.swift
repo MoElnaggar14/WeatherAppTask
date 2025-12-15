@@ -29,7 +29,7 @@ enum CitySortOrder {
 final class GetCitiesUseCase: GetCitiesUseCaseProtocol {
     private let repository: WeatherRepositoryProtocol
 
-    init(repository: WeatherRepositoryProtocol) {
+    init(repository: WeatherRepositoryProtocol = WeatherRepository()) {
         self.repository = repository
     }
 

@@ -6,15 +6,17 @@
 //
 
 import Foundation
+import Pulse
 
 final class NetworkManager: NetworkProtocol {
-    private let session: URLSession
-
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
-
     func send<T: Decodable>(api: some Endpoint, model: T.Type) async throws -> T {
+        let session: URLSessionProtocol
+        #if DEBUG
+        session = URLSessionProxy(configuration: .default)
+        #else
+        session = URLSession(configuration: .default)
+        #endif
+
         let request = URLRequestFactory.generateRequest(outOf: api)
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {

@@ -20,8 +20,8 @@ final class AddCityUseCase: AddCityUseCaseProtocol {
     private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
 
     init(
-        repository: WeatherRepositoryProtocol,
-        fetchWeatherUseCase: FetchWeatherUseCaseProtocol
+        repository: WeatherRepositoryProtocol = WeatherRepository(),
+        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase()
     ) {
         self.repository = repository
         self.fetchWeatherUseCase = fetchWeatherUseCase

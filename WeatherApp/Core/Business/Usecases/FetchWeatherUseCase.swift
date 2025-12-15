@@ -18,7 +18,7 @@ protocol FetchWeatherUseCaseProtocol {
 final class FetchWeatherUseCase: FetchWeatherUseCaseProtocol {
     private let repository: WeatherRepositoryProtocol
 
-    init(repository: WeatherRepositoryProtocol) {
+    init(repository: WeatherRepositoryProtocol = WeatherRepository()) {
         self.repository = repository
     }
 

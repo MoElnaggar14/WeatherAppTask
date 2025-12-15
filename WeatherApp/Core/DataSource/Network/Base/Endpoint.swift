@@ -50,7 +50,7 @@ extension Endpoint {
         }
 
         var parameters = Parameters()
-        parameters["appid"] = apiKey
+        parameters["appid"] = "d9e81869959f95f8e50d1ed3c88aba4b"
 
         return parameters
     }

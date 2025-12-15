@@ -17,7 +17,7 @@ extension WeatherEndpoint: Endpoint {
     var path: String {
         switch self {
         case .weather:
-            "/data/2.5/weather"
+            "weather"
         }
     }
 

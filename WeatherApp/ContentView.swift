@@ -11,15 +11,19 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Text("Hello, Weather App!")
-        }
+        CitiesListView()
         #if DEBUG
-        .debugMenu()
+            .debugMenu()
         #endif
     }
 }
 
-#Preview {
+#Preview("Dark Mode") {
     ContentView()
+        .preferredColorScheme(.dark)
+}
+
+#Preview("Light Mode") {
+    ContentView()
+        .preferredColorScheme(.light)
 }

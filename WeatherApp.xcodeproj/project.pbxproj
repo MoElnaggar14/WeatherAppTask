@@ -11,6 +11,7 @@
 		A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A472EEF0F7500DB3AA5 /* Pulse */; };
 		A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A492EEF0F7500DB3AA5 /* PulseUI */; };
 		A5BE7A892EEF20FB00DB3AA5 /* WeatherAppSecrets in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */; };
+		A5BE7BBB2EEF9ECD00DB3AA5 /* PulseProxy in Frameworks */ = {isa = PBXBuildFile; productRef = A5BE7BBA2EEF9ECD00DB3AA5 /* PulseProxy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5BE7A4A2EEF0F7500DB3AA5 /* PulseUI in Frameworks */,
+				A5BE7BBB2EEF9ECD00DB3AA5 /* PulseProxy in Frameworks */,
 				A5BE7A482EEF0F7500DB3AA5 /* Pulse in Frameworks */,
 				A5BE7A322EEF01E400DB3AA5 /* SwiftMoLogger in Frameworks */,
 				A5BE7A892EEF20FB00DB3AA5 /* WeatherAppSecrets in Frameworks */,
@@ -89,6 +91,7 @@
 				A570A49C2EEEF521002EFE54 /* WeatherApp */,
 				A570A4AF2EEEF523002EFE54 /* WeatherAppTests */,
 				A570A4B92EEEF523002EFE54 /* WeatherAppUITests */,
+				A5BE7BB92EEF9ECD00DB3AA5 /* Frameworks */,
 				A570A49B2EEEF521002EFE54 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -101,6 +104,13 @@
 				A570A4B62EEEF523002EFE54 /* WeatherAppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A5BE7BB92EEF9ECD00DB3AA5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,6 +137,7 @@
 				A5BE7A472EEF0F7500DB3AA5 /* Pulse */,
 				A5BE7A492EEF0F7500DB3AA5 /* PulseUI */,
 				A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */,
+				A5BE7BBA2EEF9ECD00DB3AA5 /* PulseProxy */,
 			);
 			productName = WeatherApp;
 			productReference = A570A49A2EEEF521002EFE54 /* WeatherApp.app */;
@@ -653,6 +664,11 @@
 		A5BE7A882EEF20FB00DB3AA5 /* WeatherAppSecrets */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WeatherAppSecrets;
+		};
+		A5BE7BBA2EEF9ECD00DB3AA5 /* PulseProxy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5BE7A462EEF0F7500DB3AA5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseProxy;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

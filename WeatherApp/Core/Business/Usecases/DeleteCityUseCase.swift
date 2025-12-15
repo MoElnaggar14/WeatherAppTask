@@ -18,7 +18,7 @@ protocol DeleteCityUseCaseProtocol {
 final class DeleteCityUseCase: DeleteCityUseCaseProtocol {
     private let repository: WeatherRepositoryProtocol
 
-    init(repository: WeatherRepositoryProtocol) {
+    init(repository: WeatherRepositoryProtocol = WeatherRepository()) {
         self.repository = repository
     }
 

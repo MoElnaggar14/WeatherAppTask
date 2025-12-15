@@ -17,6 +17,13 @@
 
 // swiftlint:disable identifier_name line_length nesting type_body_length type_name
 public enum AppColors: Sendable {
+  public static let accentColor = ColorAsset(name: "AccentColor")
+  public static let background = ColorAsset(name: "Background")
+  public static let cardBackground = ColorAsset(name: "CardBackground")
+  public static let primaryText = ColorAsset(name: "PrimaryText")
+  public static let secondaryBackground = ColorAsset(name: "SecondaryBackground")
+  public static let secondaryText = ColorAsset(name: "SecondaryText")
+  public static let separator = ColorAsset(name: "Separator")
 }
 // swiftlint:enable identifier_name line_length nesting type_body_length type_name
 
