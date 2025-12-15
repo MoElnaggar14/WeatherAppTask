@@ -197,8 +197,8 @@ task generate: :check_swiftgen do
 
     # Generate L10n from .xcstrings using custom script
     puts '🌍 Generating L10n from String Catalog...'
-    xcstrings_path = 'Packages/Content/Sources/Content/Resources/Localizable.xcstrings'
-    output_path = 'Packages/Content/Sources/Content/Generated/L10n+Generated.swift'
+    xcstrings_path = 'WeatherApp/Core/Localization/Resources/Localizable.xcstrings'
+    output_path = 'WeatherApp/Core/Localization/Generated/L10n+Generated.swift'
     script_path = 'Scripts/generate-l10n.swift'
 
     if File.exist?(xcstrings_path) && File.exist?(script_path)

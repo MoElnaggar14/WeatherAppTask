@@ -135,13 +135,7 @@ custom_rules:
     regex: '\/\/\s*(TODO|FIXME)'
     message: "Consider creating an issue instead of TODO/FIXME comments."
     severity: warning
-
-  weatherApp_hardcoded_strings:
-    name: "Hardcoded Strings"
-    regex: '"[^"]{20,}"'
-    message: "Consider using localized strings (L10n) for long text."
-    severity: warning
-
+    
   weatherApp_api_keys:
     name: "API Keys"
     regex: '(api[_-]?key|secret|token|password)\s*=\s*"[^"]+"'
