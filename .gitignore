@@ -63,6 +63,7 @@ fastlane/.env.default.auth
 fastlane/app_store_connect_api_key.p8
 fastlane/*.p8
 */__Snapshots__/
+*/SnapshotTests/__Snapshots__/
 
 # Code Injection
 #

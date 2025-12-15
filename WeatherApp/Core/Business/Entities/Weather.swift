@@ -34,7 +34,7 @@ struct Weather: Identifiable, Equatable, Sendable {
     }
 
     var iconURL: URL? {
-        URL(string: "http://openweathermap.org/img/w/\(iconCode).png")
+        URL(string: "https://openweathermap.org/img/w/\(iconCode).png")
     }
 
     var formattedTemperature: String {
