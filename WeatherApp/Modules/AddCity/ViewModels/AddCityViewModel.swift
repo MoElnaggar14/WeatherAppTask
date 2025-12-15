@@ -19,6 +19,16 @@ final class AddCityViewModel {
     private(set) var error: Error?
 
     private var searchTask: Task<Void, Never>?
+    private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
+    private let addCityUseCase: AddCityUseCaseProtocol
+
+    init(
+        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase(),
+        addCityUseCase: AddCityUseCaseProtocol = AddCityUseCase()
+    ) {
+        self.fetchWeatherUseCase = fetchWeatherUseCase
+        self.addCityUseCase = addCityUseCase
+    }
 
     func search(query: String) async {
         searchTask?.cancel()
@@ -38,7 +48,7 @@ final class AddCityViewModel {
 
             do {
                 // Try to fetch weather for the query to validate it's a real location
-                _ = try await FetchWeatherUseCase().execute(cityName: query)
+                _ = try await fetchWeatherUseCase.execute(cityName: query)
 
                 guard !Task.isCancelled else { return }
 
@@ -55,7 +65,7 @@ final class AddCityViewModel {
 
     func addCity(name: String) async -> City? {
         do {
-            return try await AddCityUseCase().execute(cityName: name)
+            return try await addCityUseCase.execute(cityName: name)
         } catch {
             self.error = error
             return nil

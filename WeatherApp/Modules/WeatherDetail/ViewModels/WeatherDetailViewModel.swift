@@ -18,12 +18,18 @@ final class WeatherDetailViewModel {
     private(set) var error: Error?
     private(set) var fetchedWeather: Weather?
 
+    private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
+
     var latestWeather: Weather? {
         fetchedWeather ?? city.latestWeather
     }
 
-    init(city: City) {
+    init(
+        city: City,
+        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase()
+    ) {
         self.city = city
+        self.fetchWeatherUseCase = fetchWeatherUseCase
     }
 
     func fetchWeather() async {
@@ -35,7 +41,7 @@ final class WeatherDetailViewModel {
         error = nil
 
         do {
-            fetchedWeather = try await FetchWeatherUseCase().execute(cityName: city.name)
+            fetchedWeather = try await fetchWeatherUseCase.execute(cityName: city.name)
         } catch {
             self.error = error
         }
