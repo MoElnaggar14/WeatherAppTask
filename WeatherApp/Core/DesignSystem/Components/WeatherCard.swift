@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - WeatherCard
 
 struct WeatherCard: View {
+    let iconURL: URL?
     let iconName: String
     let description: String
     let temperature: String
@@ -19,9 +20,7 @@ struct WeatherCard: View {
     var body: some View {
         VStack(spacing: AppTheme.Spacing.lg) {
             // Weather Icon
-            Image(systemName: iconName)
-                .font(.system(size: 64))
-                .foregroundStyle(AppTheme.Colors.accent)
+            WeatherIconView(iconURL: iconURL, fallbackIconName: iconName)
                 .padding(.top, AppTheme.Spacing.lg)
 
             // Weather Details
@@ -36,6 +35,44 @@ struct WeatherCard: View {
         .padding(.horizontal, AppTheme.Spacing.lg)
         .background(AppTheme.Colors.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.CornerRadius.extraLarge))
+    }
+}
+
+// MARK: - WeatherIconView
+
+struct WeatherIconView: View {
+    let iconURL: URL?
+    let fallbackIconName: String
+
+    var body: some View {
+        Group {
+            if let url = iconURL {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: 64, height: 64)
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 80, height: 80)
+                    case .failure:
+                        fallbackIcon
+                    @unknown default:
+                        fallbackIcon
+                    }
+                }
+            } else {
+                fallbackIcon
+            }
+        }
+    }
+
+    private var fallbackIcon: some View {
+        Image(systemName: fallbackIconName)
+            .font(.system(size: 64))
+            .foregroundStyle(AppTheme.Colors.accent)
     }
 }
 
@@ -64,11 +101,29 @@ struct WeatherDetailRow: View {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("With URL Icon") {
     ZStack {
         Color.black.ignoresSafeArea()
 
         WeatherCard(
+            iconURL: URL(string: "https://openweathermap.org/img/w/02d.png"),
+            iconName: "cloud.sun.fill",
+            description: "Cloudy",
+            temperature: "20° C",
+            humidity: "45%",
+            windSpeed: "20 km/h"
+        )
+        .padding()
+    }
+    .preferredColorScheme(.dark)
+}
+
+#Preview("With Fallback Icon") {
+    ZStack {
+        Color.black.ignoresSafeArea()
+
+        WeatherCard(
+            iconURL: nil,
             iconName: "cloud.sun.fill",
             description: "Cloudy",
             temperature: "20° C",

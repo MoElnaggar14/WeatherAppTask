@@ -10,8 +10,12 @@ import SwiftUI
 // MARK: - CitiesListView
 
 struct CitiesListView: View {
-    @State private var viewModel = CitiesViewModel()
+    @State private var viewModel: CitiesViewModel
     @State private var navigationPath = NavigationPath()
+
+    init(viewModel: CitiesViewModel = CitiesViewModel()) {
+        _viewModel = State(initialValue: viewModel)
+    }
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -76,13 +80,13 @@ struct CitiesListView: View {
                                     await viewModel.deleteCity(city)
                                 }
                             } label: {
-                                Label("Delete", systemImage: "trash")
+                                Label(L10n.delete, systemImage: "trash")
                             }
 
                             Button {
                                 viewModel.showWeatherDetailForCity(city)
                             } label: {
-                                Label("View Weather", systemImage: "cloud.sun")
+                                Label(L10n.viewWeather, systemImage: "cloud.sun")
                             }
                         }
 
@@ -104,11 +108,11 @@ struct CitiesListView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(AppTheme.Colors.secondaryText)
 
-            Text("No cities added yet")
+            Text(L10n.noCitiesAddedYet)
                 .font(AppTheme.Typography.headline)
                 .foregroundStyle(AppTheme.Colors.secondaryText)
 
-            Text("Tap + to add your first city")
+            Text(L10n.tapToAddYourFirstCity)
                 .font(AppTheme.Typography.subheadline)
                 .foregroundStyle(AppTheme.Colors.secondaryText.opacity(0.7))
 
@@ -119,7 +123,19 @@ struct CitiesListView: View {
 
 // MARK: - Preview
 
-#Preview {
-    CitiesListView()
-        .preferredColorScheme(.dark)
+#Preview("With Cities") {
+    CitiesListView(
+        viewModel: CitiesViewModel(
+            isPreview: true,
+            mockCities: City.mockCities
+        )
+    )
+    .preferredColorScheme(.dark)
+}
+
+#Preview("Empty State") {
+    CitiesListView(
+        viewModel: CitiesViewModel(isPreview: true, mockCities: [])
+    )
+    .preferredColorScheme(.dark)
 }

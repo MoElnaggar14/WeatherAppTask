@@ -67,11 +67,11 @@ struct HistoricalWeatherView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(AppTheme.Colors.secondaryText)
 
-            Text("No weather history")
+            Text(L10n.noWeatherHistory)
                 .font(AppTheme.Typography.headline)
                 .foregroundStyle(AppTheme.Colors.secondaryText)
 
-            Text("Weather data will appear here after fetching")
+            Text(L10n.weatherDataWillAppearHereAfterFetching)
                 .font(AppTheme.Typography.subheadline)
                 .foregroundStyle(AppTheme.Colors.secondaryText.opacity(0.7))
                 .multilineTextAlignment(.center)

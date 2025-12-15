@@ -19,7 +19,7 @@ struct AddCityView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Prompt text
-                Text("Enter city, postcode or airport location")
+                Text(L10n.enterCityPostcodeOrAirportLocation)
                     .font(AppTheme.Typography.subheadline)
                     .foregroundStyle(.primary)
                     .padding(.top, AppTheme.Spacing.md)
@@ -41,12 +41,12 @@ struct AddCityView: View {
             .searchable(
                 text: $viewModel.searchQuery,
                 placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Search"
+                prompt: L10n.search
             )
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(L10n.cancel) {
                         dismiss()
                     }
                 }
@@ -84,11 +84,11 @@ struct AddCityView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
 
-            Text("No results found")
+            Text(L10n.noResultsFound)
                 .font(AppTheme.Typography.headline)
                 .foregroundStyle(.secondary)
 
-            Text("Try a different search term")
+            Text(L10n.tryADifferentSearchTerm)
                 .font(AppTheme.Typography.subheadline)
                 .foregroundStyle(.tertiary)
 

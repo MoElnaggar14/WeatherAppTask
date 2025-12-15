@@ -21,7 +21,18 @@ final class CitiesViewModel {
     var showAddCity = false
     var showWeatherDetail = false
 
+    private let isPreview: Bool
+
+    init(isPreview: Bool = false, mockCities: [City] = []) {
+        self.isPreview = isPreview
+        if isPreview {
+            cities = mockCities
+        }
+    }
+
     func loadCities() async {
+        guard !isPreview else { return }
+
         isLoading = true
         error = nil
 

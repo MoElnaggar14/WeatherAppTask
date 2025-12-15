@@ -30,6 +30,7 @@ struct WeatherDetailView: View {
                 // Weather card
                 if let weather = viewModel.latestWeather {
                     WeatherCard(
+                        iconURL: weather.iconURL,
                         iconName: weatherIconName(for: weather.iconCode),
                         description: weather.description.capitalized,
                         temperature: "\(Int(weather.temperature))° C",
@@ -101,7 +102,7 @@ struct WeatherDetailView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(AppTheme.Colors.secondaryText)
 
-            Text("No weather data")
+            Text(L10n.noWeatherData)
                 .font(AppTheme.Typography.headline)
                 .foregroundStyle(AppTheme.Colors.secondaryText)
         }
@@ -109,7 +110,7 @@ struct WeatherDetailView: View {
 
     private func footerView(for weather: Weather) -> some View {
         VStack(spacing: AppTheme.Spacing.xxs) {
-            Text("WEATHER INFORMATION FOR \(viewModel.city.name.uppercased()) RECEIVED ON")
+            Text(L10n.weatherInformationForReceivedOn(viewModel.city.name.uppercased()))
                 .font(AppTheme.Typography.caption)
                 .foregroundStyle(AppTheme.Colors.secondaryText.opacity(0.7))
                 .tracking(1)
