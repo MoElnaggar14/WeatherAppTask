@@ -16,11 +16,23 @@ final class AddCityViewModel {
     var searchQuery = ""
     private(set) var searchResults: [String] = []
     private(set) var isSearching = false
+    private(set) var isAddingCity = false
     private(set) var error: Error?
+    var showErrorToast = false
+    var errorMessage = ""
 
     private var searchTask: Task<Void, Never>?
     private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
     private let addCityUseCase: AddCityUseCaseProtocol
+
+    var appError: AppError? {
+        guard let error else { return nil }
+        return AppError.from(error)
+    }
+
+    var hasSearched: Bool {
+        !searchQuery.isEmpty && searchQuery.count >= 2 && !isSearching
+    }
 
     init(
         fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase(),
@@ -45,6 +57,7 @@ final class AddCityViewModel {
             guard !Task.isCancelled else { return }
 
             isSearching = true
+            error = nil
 
             do {
                 // Try to fetch weather for the query to validate it's a real location
@@ -57,6 +70,7 @@ final class AddCityViewModel {
             } catch {
                 guard !Task.isCancelled else { return }
                 searchResults = []
+                // Don't show error for search - just show no results
             }
 
             isSearching = false
@@ -64,11 +78,24 @@ final class AddCityViewModel {
     }
 
     func addCity(name: String) async -> City? {
+        isAddingCity = true
+        error = nil
+
         do {
-            return try await addCityUseCase.execute(cityName: name)
+            let city = try await addCityUseCase.execute(cityName: name)
+            isAddingCity = false
+            return city
         } catch {
             self.error = error
+            errorMessage = AppError.from(error).errorDescription ?? L10n.failedToAddCity
+            showErrorToast = true
+            isAddingCity = false
             return nil
         }
+    }
+
+    func clearError() {
+        error = nil
+        showErrorToast = false
     }
 }

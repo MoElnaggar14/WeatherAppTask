@@ -19,20 +19,30 @@ final class WeatherDetailViewModel {
     private(set) var fetchedWeather: Weather?
 
     private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
+    private let isPreview: Bool
 
     var latestWeather: Weather? {
         fetchedWeather ?? city.latestWeather
     }
 
+    var appError: AppError? {
+        guard let error else { return nil }
+        return AppError.from(error)
+    }
+
     init(
         city: City,
-        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase()
+        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase(),
+        isPreview: Bool = false
     ) {
         self.city = city
         self.fetchWeatherUseCase = fetchWeatherUseCase
+        self.isPreview = isPreview
     }
 
     func fetchWeather() async {
+        guard !isPreview else { return }
+
         if
             let latest = city.latestWeather,
             Date().timeIntervalSince(latest.requestDate) < 60 { return }
@@ -47,5 +57,14 @@ final class WeatherDetailViewModel {
         }
 
         isLoading = false
+    }
+
+    func retry() async {
+        error = nil
+        await fetchWeather()
+    }
+
+    func clearError() {
+        error = nil
     }
 }

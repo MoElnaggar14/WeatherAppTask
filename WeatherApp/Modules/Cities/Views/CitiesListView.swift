@@ -31,16 +31,32 @@ struct CitiesListView: View {
                     )
                     .padding(.top, AppTheme.Spacing.md)
 
-                    if viewModel.isLoading {
+                    if viewModel.isLoading, viewModel.cities.isEmpty {
                         Spacer()
                         ProgressView()
                             .tint(AppTheme.Colors.accent)
+                        Spacer()
+                    } else if let error = viewModel.appError, viewModel.cities.isEmpty {
+                        Spacer()
+                        ErrorView(error: error) {
+                            Task {
+                                await viewModel.loadCities()
+                            }
+                        }
                         Spacer()
                     } else if viewModel.cities.isEmpty {
                         emptyStateView
                     } else {
                         citiesListView
                     }
+                }
+
+                if viewModel.isDeleting {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                    ProgressView()
+                        .tint(.white)
+                        .scaleEffect(1.5)
                 }
             }
             .navigationBarHidden(true)
@@ -61,42 +77,70 @@ struct CitiesListView: View {
                 WeatherDetailView(city: city)
             }
         }
+        .toast(isPresented: $viewModel.showSuccessToast, message: viewModel.successMessage)
+        .toast(isPresented: $viewModel.showErrorToast, message: viewModel.errorMessage, isError: true)
+        .confirmationDialog(
+            L10n.deleteCity,
+            isPresented: $viewModel.showDeleteConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(L10n.delete, role: .destructive) {
+                Task {
+                    await viewModel.confirmDeleteCity()
+                }
+            }
+            Button(L10n.cancel, role: .cancel) {
+                viewModel.cancelDelete()
+            }
+        } message: {
+            Text(L10n.deleteCityConfirmation)
+        }
         .task {
             await viewModel.loadCities()
         }
     }
 
     private var citiesListView: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(viewModel.cities) { city in
-                    VStack(spacing: 0) {
-                        CityRowView(cityName: city.name.uppercased()) {
-                            navigationPath.append(city)
-                        }
-                        .contextMenu {
-                            Button(role: .destructive) {
-                                Task {
-                                    await viewModel.deleteCity(city)
-                                }
-                            } label: {
-                                Label(L10n.delete, systemImage: "trash")
-                            }
+        List {
+            ForEach(viewModel.cities) { city in
+                CityRowContent(cityName: city.name.uppercased()) {
+                    navigationPath.append(city)
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        viewModel.requestDeleteCity(city)
+                    } label: {
+                        Label(L10n.delete, systemImage: "trash")
+                    }
 
-                            Button {
-                                viewModel.showWeatherDetailForCity(city)
-                            } label: {
-                                Label(L10n.viewWeather, systemImage: "cloud.sun")
-                            }
-                        }
+                    Button {
+                        viewModel.showWeatherDetailForCity(city)
+                    } label: {
+                        Label(L10n.viewWeather, systemImage: "cloud.sun")
+                    }
+                    .tint(AppTheme.Colors.accent)
+                }
+                .contextMenu {
+                    Button(role: .destructive) {
+                        viewModel.requestDeleteCity(city)
+                    } label: {
+                        Label(L10n.delete, systemImage: "trash")
+                    }
 
-                        Divider()
-                            .background(AppTheme.Colors.separator)
-                            .padding(.horizontal, AppTheme.Spacing.md)
+                    Button {
+                        viewModel.showWeatherDetailForCity(city)
+                    } label: {
+                        Label(L10n.viewWeather, systemImage: "cloud.sun")
                     }
                 }
             }
-            .padding(.top, AppTheme.Spacing.lg)
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .refreshable {
+            await viewModel.loadCities()
         }
     }
 
@@ -118,6 +162,40 @@ struct CitiesListView: View {
 
             Spacer()
         }
+    }
+}
+
+// MARK: - CityRowContent
+
+private struct CityRowContent: View {
+    let cityName: String
+    let onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            VStack(spacing: 0) {
+                HStack {
+                    Text(cityName)
+                        .font(AppTheme.Typography.cityName)
+                        .foregroundStyle(AppTheme.Colors.primaryText)
+                        .tracking(1)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.accent)
+                }
+                .padding(.vertical, AppTheme.Spacing.md)
+                .padding(.horizontal, AppTheme.Spacing.md)
+                .contentShape(Rectangle())
+
+                Divider()
+                    .background(AppTheme.Colors.separator)
+                    .padding(.horizontal, AppTheme.Spacing.md)
+            }
+        }
+        .buttonStyle(.plain)
     }
 }
 

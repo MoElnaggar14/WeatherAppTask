@@ -13,8 +13,8 @@ struct WeatherDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel: WeatherDetailViewModel
 
-    init(city: City) {
-        _viewModel = State(initialValue: WeatherDetailViewModel(city: city))
+    init(city: City, isPreview: Bool = false) {
+        _viewModel = State(initialValue: WeatherDetailViewModel(city: city, isPreview: isPreview))
     }
 
     var body: some View {
@@ -22,33 +22,27 @@ struct WeatherDetailView: View {
             WaveBackground()
 
             VStack(spacing: 0) {
-                // Header card with title
                 headerCard
 
                 Spacer()
 
-                // Weather card
-                if let weather = viewModel.latestWeather {
-                    WeatherCard(
-                        iconURL: weather.iconURL,
-                        iconName: weatherIconName(for: weather.iconCode),
-                        description: weather.description.capitalized,
-                        temperature: "\(Int(weather.temperature))° C",
-                        humidity: weather.formattedHumidity,
-                        windSpeed: "-- km/h"
-                    )
-                    .padding(.horizontal, AppTheme.Spacing.lg)
-                } else if viewModel.isLoading {
-                    ProgressView()
-                        .tint(AppTheme.Colors.accent)
+                if viewModel.isLoading {
+                    loadingView
+                } else if let error = viewModel.appError {
+                    ErrorView(error: error) {
+                        Task {
+                            await viewModel.retry()
+                        }
+                    }
+                } else if let weather = viewModel.latestWeather {
+                    weatherContent(weather)
                 } else {
                     noWeatherView
                 }
 
                 Spacer()
 
-                // Footer
-                if let weather = viewModel.latestWeather {
+                if let weather = viewModel.latestWeather, viewModel.appError == nil {
                     footerView(for: weather)
                 }
             }
@@ -56,6 +50,31 @@ struct WeatherDetailView: View {
         .task {
             await viewModel.fetchWeather()
         }
+    }
+
+    private var loadingView: some View {
+        VStack(spacing: AppTheme.Spacing.md) {
+            ProgressView()
+                .tint(AppTheme.Colors.accent)
+                .scaleEffect(1.5)
+
+            Text(L10n.loadingWeather)
+                .font(AppTheme.Typography.subheadline)
+                .foregroundStyle(AppTheme.Colors.secondaryText)
+        }
+    }
+
+    private func weatherContent(_ weather: Weather) -> some View {
+        WeatherCard(
+            iconURL: weather.iconURL,
+            iconName: weatherIconName(for: weather.iconCode),
+            description: weather.description.capitalized,
+            temperature: "\(Int(weather.temperature))° C",
+            humidity: weather.formattedHumidity,
+            windSpeed: "-- km/h"
+        )
+        .padding(.horizontal, AppTheme.Spacing.lg)
+        .transition(.scale.combined(with: .opacity))
     }
 
     private var headerCard: some View {
@@ -75,7 +94,6 @@ struct WeatherDetailView: View {
 
                 Spacer()
 
-                // Placeholder for symmetry
                 Color.clear
                     .frame(width: 56, height: 56)
             }
@@ -105,6 +123,28 @@ struct WeatherDetailView: View {
             Text(L10n.noWeatherData)
                 .font(AppTheme.Typography.headline)
                 .foregroundStyle(AppTheme.Colors.secondaryText)
+
+            Text(L10n.pullToRefreshWeather)
+                .font(AppTheme.Typography.subheadline)
+                .foregroundStyle(AppTheme.Colors.secondaryText.opacity(0.7))
+
+            Button {
+                Task {
+                    await viewModel.fetchWeather()
+                }
+            } label: {
+                HStack(spacing: AppTheme.Spacing.xs) {
+                    Image(systemName: "arrow.clockwise")
+                    Text(L10n.refresh)
+                }
+                .font(AppTheme.Typography.headline)
+                .foregroundStyle(AppTheme.Colors.background)
+                .padding(.horizontal, AppTheme.Spacing.lg)
+                .padding(.vertical, AppTheme.Spacing.sm)
+                .background(AppTheme.Colors.accent)
+                .clipShape(Capsule())
+            }
+            .padding(.top, AppTheme.Spacing.sm)
         }
     }
 
@@ -164,7 +204,7 @@ struct WeatherDetailView: View {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("With Weather") {
     WeatherDetailView(
         city: City(
             name: "London UK",
@@ -177,7 +217,16 @@ struct WeatherDetailView: View {
                     requestDate: Date()
                 ),
             ]
-        )
+        ),
+        isPreview: true
+    )
+    .preferredColorScheme(.dark)
+}
+
+#Preview("No Weather") {
+    WeatherDetailView(
+        city: City(name: "New York", weatherHistory: []),
+        isPreview: true
     )
     .preferredColorScheme(.dark)
 }

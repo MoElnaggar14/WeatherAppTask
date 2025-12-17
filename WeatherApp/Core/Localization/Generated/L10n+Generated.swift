@@ -85,6 +85,70 @@ public enum L10n {
 
   public static let weatherApp = L10n.tr("weather_app", fallback: "WeatherApp")
 
+  // MARK: - New strings for enhanced UI
+
+  /// Historical subtitle for weather history screen
+  public static let historical = L10n.tr("Historical", fallback: "HISTORICAL")
+
+  /// Delete city confirmation dialog title
+  public static let deleteCity = L10n.tr("Delete City", fallback: "Delete City")
+
+  /// Delete city confirmation message
+  public static let deleteCityConfirmation = L10n.tr("Delete City Confirmation", fallback: "Are you sure you want to delete this city? All weather history will be lost.")
+
+  /// Delete weather record dialog title
+  public static let deleteWeatherRecord = L10n.tr("Delete Weather Record", fallback: "Delete Weather Record")
+
+  /// Delete weather record confirmation message
+  public static let deleteWeatherRecordConfirmation = L10n.tr("Delete Weather Record Confirmation", fallback: "Are you sure you want to delete this weather record?")
+
+  /// Add city button label
+  public static let addCity = L10n.tr("Add City", fallback: "Add City")
+
+  /// Loading weather message
+  public static let loadingWeather = L10n.tr("Loading Weather", fallback: "Loading weather...")
+
+  /// Pull to refresh weather hint
+  public static let pullToRefreshWeather = L10n.tr("Pull to refresh weather", fallback: "Tap to fetch current weather")
+
+  /// Refresh button label
+  public static let refresh = L10n.tr("Refresh", fallback: "Refresh")
+
+  /// Try again button label
+  public static let tryAgain = L10n.tr("Try Again", fallback: "Try Again")
+
+  /// Error title
+  public static let error = L10n.tr("Error", fallback: "Error")
+
+  /// City not found error message
+  public static let cityNotFoundError = L10n.tr("City Not Found Error", fallback: "City not found. Please check the city name and try again.")
+
+  /// No internet connection error message
+  public static let noInternetError = L10n.tr("No Internet Error", fallback: "No internet connection. Please check your network settings.")
+
+  /// Server error message
+  public static let serverError = L10n.tr("Server Error", fallback: "Server is temporarily unavailable. Please try again later.")
+
+  /// Something went wrong error message
+  public static let somethingWentWrong = L10n.tr("Something Went Wrong", fallback: "Something went wrong. Please try again.")
+
+  /// City added successfully message
+  public static let cityAddedSuccessfully = L10n.tr("City Added Successfully", fallback: "City added successfully")
+
+  /// City deleted successfully message
+  public static let cityDeletedSuccessfully = L10n.tr("City Deleted Successfully", fallback: "City deleted successfully")
+
+  /// Weather record deleted message
+  public static let weatherRecordDeleted = L10n.tr("Weather Record Deleted", fallback: "Weather record deleted")
+
+  /// Failed to add city error message
+  public static let failedToAddCity = L10n.tr("Failed To Add City", fallback: "Failed to add city. Please try again.")
+
+  /// Adding city progress message
+  public static let addingCity = L10n.tr("Adding City", fallback: "Adding city...")
+
+  /// Searching message
+  public static let searching = L10n.tr("Searching", fallback: "Searching...")
 }
 
 // MARK: - Implementation Details

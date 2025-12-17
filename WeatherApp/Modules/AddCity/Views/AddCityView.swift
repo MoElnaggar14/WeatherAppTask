@@ -17,25 +17,50 @@ struct AddCityView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // Prompt text
-                Text(L10n.enterCityPostcodeOrAirportLocation)
-                    .font(AppTheme.Typography.subheadline)
-                    .foregroundStyle(.primary)
-                    .padding(.top, AppTheme.Spacing.md)
-                    .padding(.bottom, AppTheme.Spacing.sm)
+            ZStack {
+                VStack(spacing: 0) {
+                    // Prompt text
+                    Text(L10n.enterCityPostcodeOrAirportLocation)
+                        .font(AppTheme.Typography.subheadline)
+                        .foregroundStyle(.primary)
+                        .padding(.top, AppTheme.Spacing.md)
+                        .padding(.bottom, AppTheme.Spacing.sm)
 
-                // Search results
-                if viewModel.isSearching {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                } else if !viewModel.searchResults.isEmpty {
-                    searchResultsList
-                } else if !viewModel.searchQuery.isEmpty, viewModel.searchResults.isEmpty {
-                    noResultsView
-                } else {
-                    Spacer()
+                    // Search results
+                    if viewModel.isSearching {
+                        Spacer()
+                        VStack(spacing: AppTheme.Spacing.sm) {
+                            ProgressView()
+                            Text(L10n.searching)
+                                .font(AppTheme.Typography.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    } else if !viewModel.searchResults.isEmpty {
+                        searchResultsList
+                    } else if viewModel.hasSearched {
+                        noResultsView
+                    } else {
+                        hintView
+                    }
+                }
+
+                // Loading overlay when adding city
+                if viewModel.isAddingCity {
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+
+                    VStack(spacing: AppTheme.Spacing.md) {
+                        ProgressView()
+                            .tint(.white)
+                            .scaleEffect(1.2)
+                        Text(L10n.addingCity)
+                            .font(AppTheme.Typography.subheadline)
+                            .foregroundStyle(.white)
+                    }
+                    .padding(AppTheme.Spacing.lg)
+                    .background(Color.black.opacity(0.7))
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.CornerRadius.medium))
                 }
             }
             .searchable(
@@ -49,14 +74,17 @@ struct AddCityView: View {
                     Button(L10n.cancel) {
                         dismiss()
                     }
+                    .disabled(viewModel.isAddingCity)
                 }
             }
         }
+        .toast(isPresented: $viewModel.showErrorToast, message: viewModel.errorMessage, isError: true)
         .onChange(of: viewModel.searchQuery) { _, newValue in
             Task {
                 await viewModel.search(query: newValue)
             }
         }
+        .interactiveDismissDisabled(viewModel.isAddingCity)
     }
 
     private var searchResultsList: some View {
@@ -69,9 +97,20 @@ struct AddCityView: View {
                     }
                 }
             } label: {
-                Text(result)
-                    .foregroundStyle(.primary)
+                HStack {
+                    Image(systemName: "mappin.circle.fill")
+                        .foregroundStyle(AppTheme.Colors.accent)
+
+                    Text(result)
+                        .foregroundStyle(.primary)
+
+                    Spacer()
+
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(AppTheme.Colors.accent)
+                }
             }
+            .disabled(viewModel.isAddingCity)
         }
         .listStyle(.plain)
     }
@@ -91,6 +130,30 @@ struct AddCityView: View {
             Text(L10n.tryADifferentSearchTerm)
                 .font(AppTheme.Typography.subheadline)
                 .foregroundStyle(.tertiary)
+                .multilineTextAlignment(.center)
+
+            Spacer()
+        }
+        .padding(.horizontal, AppTheme.Spacing.lg)
+    }
+
+    private var hintView: some View {
+        VStack(spacing: AppTheme.Spacing.md) {
+            Spacer()
+
+            Image(systemName: "globe.americas.fill")
+                .font(.system(size: 56))
+                .foregroundStyle(.secondary.opacity(0.5))
+
+            VStack(spacing: AppTheme.Spacing.xs) {
+                Text("Search for a city")
+                    .font(AppTheme.Typography.headline)
+                    .foregroundStyle(.secondary)
+
+                Text("Enter at least 2 characters to search")
+                    .font(AppTheme.Typography.subheadline)
+                    .foregroundStyle(.tertiary)
+            }
 
             Spacer()
         }
