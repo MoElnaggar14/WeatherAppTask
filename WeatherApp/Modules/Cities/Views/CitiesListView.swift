@@ -12,6 +12,7 @@ import SwiftUI
 struct CitiesListView: View {
     @State private var viewModel: CitiesViewModel
     @State private var navigationPath = NavigationPath()
+    @State private var showSettings = false
 
     init(viewModel: CitiesViewModel = CitiesViewModel()) {
         _viewModel = State(initialValue: viewModel)
@@ -25,6 +26,9 @@ struct CitiesListView: View {
                 VStack(spacing: 0) {
                     ScreenHeader(
                         title: L10n.citiesTitle.uppercased(),
+                        leadingButton: .settings {
+                            showSettings = true
+                        },
                         trailingButton: .add {
                             viewModel.showAddCity = true
                         }
@@ -76,6 +80,9 @@ struct CitiesListView: View {
             if let city = viewModel.selectedCity {
                 WeatherDetailView(city: city)
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
         }
         .toast(isPresented: $viewModel.showSuccessToast, message: viewModel.successMessage)
         .toast(isPresented: $viewModel.showErrorToast, message: viewModel.errorMessage, isError: true)

@@ -44,6 +44,7 @@ struct NavigationButton: View {
     enum Style {
         case back
         case close
+        case settings
     }
 
     let style: Style
@@ -74,6 +75,8 @@ struct NavigationButton: View {
             "arrow.left"
         case .close:
             "xmark"
+        case .settings:
+            "gearshape.fill"
         }
     }
 }

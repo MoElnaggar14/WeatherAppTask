@@ -18,6 +18,7 @@ struct ScreenHeader: View {
     enum LeadingButton {
         case back(() -> Void)
         case close(() -> Void)
+        case settings(() -> Void)
     }
 
     enum TrailingButton {
@@ -82,6 +83,8 @@ struct ScreenHeader: View {
             NavigationButton(style: .back, action: action)
         case .close(let action):
             NavigationButton(style: .close, action: action)
+        case .settings(let action):
+            NavigationButton(style: .settings, action: action)
         }
     }
 

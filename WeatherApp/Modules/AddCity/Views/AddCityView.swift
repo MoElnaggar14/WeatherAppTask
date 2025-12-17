@@ -88,27 +88,16 @@ struct AddCityView: View {
     }
 
     private var searchResultsList: some View {
-        List(viewModel.searchResults, id: \.self) { result in
+        List(viewModel.searchResults) { result in
             Button {
                 Task {
-                    if let city = await viewModel.addCity(name: result) {
+                    if let city = await viewModel.addCity(from: result) {
                         onCityAdded(city)
                         dismiss()
                     }
                 }
             } label: {
-                HStack {
-                    Image(systemName: "mappin.circle.fill")
-                        .foregroundStyle(AppTheme.Colors.accent)
-
-                    Text(result)
-                        .foregroundStyle(.primary)
-
-                    Spacer()
-
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundStyle(AppTheme.Colors.accent)
-                }
+                CitySearchResultRow(result: result)
             }
             .disabled(viewModel.isAddingCity)
         }
@@ -157,6 +146,65 @@ struct AddCityView: View {
 
             Spacer()
         }
+    }
+}
+
+// MARK: - CitySearchResultRow
+
+private struct CitySearchResultRow: View {
+    let result: CitySearchResult
+
+    var body: some View {
+        HStack(spacing: AppTheme.Spacing.sm) {
+            Image(systemName: "mappin.circle.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(AppTheme.Colors.accent)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(result.name)
+                    .font(AppTheme.Typography.headline)
+                    .foregroundStyle(.primary)
+
+                HStack(spacing: AppTheme.Spacing.xxs) {
+                    if let state = result.state, !state.isEmpty {
+                        Text(state)
+                            .font(AppTheme.Typography.subheadline)
+                            .foregroundStyle(.secondary)
+
+                        Text("•")
+                            .font(AppTheme.Typography.subheadline)
+                            .foregroundStyle(.tertiary)
+                    }
+
+                    Text(countryName(for: result.country))
+                        .font(AppTheme.Typography.subheadline)
+                        .foregroundStyle(.secondary)
+
+                    Text(countryFlag(for: result.country))
+                        .font(AppTheme.Typography.subheadline)
+                }
+            }
+
+            Spacer()
+
+            Image(systemName: "plus.circle.fill")
+                .font(.system(size: 22))
+                .foregroundStyle(AppTheme.Colors.accent)
+        }
+        .padding(.vertical, AppTheme.Spacing.xs)
+    }
+
+    private func countryName(for code: String) -> String {
+        Locale.current.localizedString(forRegionCode: code) ?? code
+    }
+
+    private func countryFlag(for code: String) -> String {
+        code
+            .uppercased()
+            .unicodeScalars
+            .compactMap { UnicodeScalar(127_397 + $0.value) }
+            .map { String($0) }
+            .joined()
     }
 }
 

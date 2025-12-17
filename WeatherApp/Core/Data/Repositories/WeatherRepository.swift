@@ -54,4 +54,12 @@ final class WeatherRepository: WeatherRepositoryProtocol, @unchecked Sendable {
         let updatedCity = city.removingWeather(withId: weather.id)
         try await localDataSource.saveCity(updatedCity)
     }
+
+    func searchCities(query: String, limit: Int) async throws -> [CitySearchResult] {
+        let responses = try await networkManager.send(
+            api: WeatherEndpoint.geocoding(query: query, limit: limit),
+            model: [GeocodingResponse].self
+        )
+        return responses.map(\.toDomain)
+    }
 }

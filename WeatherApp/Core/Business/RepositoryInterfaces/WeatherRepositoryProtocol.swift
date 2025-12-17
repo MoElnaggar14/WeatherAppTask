@@ -30,4 +30,7 @@ protocol WeatherRepositoryProtocol: Sendable {
 
     /// Delete specific weather from a city
     func deleteWeather(_ weather: Weather, from city: City) async throws
+
+    /// Search for cities by name (geocoding)
+    func searchCities(query: String, limit: Int) async throws -> [CitySearchResult]
 }

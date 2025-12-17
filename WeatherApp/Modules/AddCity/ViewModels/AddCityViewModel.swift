@@ -14,7 +14,7 @@ import Observation
 @Observable
 final class AddCityViewModel {
     var searchQuery = ""
-    private(set) var searchResults: [String] = []
+    private(set) var searchResults: [CitySearchResult] = []
     private(set) var isSearching = false
     private(set) var isAddingCity = false
     private(set) var error: Error?
@@ -22,7 +22,7 @@ final class AddCityViewModel {
     var errorMessage = ""
 
     private var searchTask: Task<Void, Never>?
-    private let fetchWeatherUseCase: FetchWeatherUseCaseProtocol
+    private let searchCitiesUseCase: SearchCitiesUseCaseProtocol
     private let addCityUseCase: AddCityUseCaseProtocol
 
     var appError: AppError? {
@@ -35,10 +35,10 @@ final class AddCityViewModel {
     }
 
     init(
-        fetchWeatherUseCase: FetchWeatherUseCaseProtocol = FetchWeatherUseCase(),
+        searchCitiesUseCase: SearchCitiesUseCaseProtocol = SearchCitiesUseCase(),
         addCityUseCase: AddCityUseCaseProtocol = AddCityUseCase()
     ) {
-        self.fetchWeatherUseCase = fetchWeatherUseCase
+        self.searchCitiesUseCase = searchCitiesUseCase
         self.addCityUseCase = addCityUseCase
     }
 
@@ -51,7 +51,7 @@ final class AddCityViewModel {
         }
 
         searchTask = Task {
-            // Debounce
+            // Debounce - 300ms
             try? await Task.sleep(nanoseconds: 300_000_000)
 
             guard !Task.isCancelled else { return }
@@ -60,13 +60,11 @@ final class AddCityViewModel {
             error = nil
 
             do {
-                // Try to fetch weather for the query to validate it's a real location
-                _ = try await fetchWeatherUseCase.execute(cityName: query)
+                let results = try await searchCitiesUseCase.execute(query: query)
 
                 guard !Task.isCancelled else { return }
 
-                // If successful, add to results
-                searchResults = [query]
+                searchResults = results
             } catch {
                 guard !Task.isCancelled else { return }
                 searchResults = []
@@ -77,12 +75,13 @@ final class AddCityViewModel {
         }
     }
 
-    func addCity(name: String) async -> City? {
+    func addCity(from searchResult: CitySearchResult) async -> City? {
         isAddingCity = true
         error = nil
 
         do {
-            let city = try await addCityUseCase.execute(cityName: name)
+            // Use the display name for better UX
+            let city = try await addCityUseCase.execute(cityName: searchResult.displayName)
             isAddingCity = false
             return city
         } catch {
